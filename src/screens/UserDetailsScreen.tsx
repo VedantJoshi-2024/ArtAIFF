@@ -13,6 +13,7 @@ import {
 } from 'react-native';
 import { MainNaivgatorType } from '../MainNavigator';
 import { RouteName } from '../routes/RouteName';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const UserDetailsScreen = () => {
   const containsSpecialCharacters = /[!@#$%^&*(),.?":{}|<>]/;
@@ -31,6 +32,16 @@ const UserDetailsScreen = () => {
   const [isInValidContact, setIsInValidContact] =
     React.useState<boolean>(false);
 
+  const saveDetailsToLocalStorage = async () => {
+    try {
+      await AsyncStorage.setItem('name', name);
+      await AsyncStorage.setItem('contact', contact);
+    } catch (e) {
+      console.log(e);
+      Alert.alert('Failed to save data', 'Please try again.');
+    }
+  };
+
   const onPressSubmit = () => {
     if (
       name.replace(/\s/g, '').length === 0 ||
@@ -39,7 +50,8 @@ const UserDetailsScreen = () => {
       validateName(name);
       validateContact(contact);
     } else if (!isInValidContact && !isInValidName) {
-      navigation.navigate(RouteName.HomeScreen, {props: {name, contact}});
+      saveDetailsToLocalStorage();
+      navigation.navigate(RouteName.HomeScreen, {name, contact});
     } else {
       Alert.alert(
         'Invalid Input',

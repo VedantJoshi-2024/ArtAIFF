@@ -9,7 +9,9 @@ import {
 } from 'react-native';
 import {TabView, TabBar} from 'react-native-tab-view';
 import {Linking} from 'react-native';
-import {useNavigation} from '@react-navigation/native';
+import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
+import { MainNaivgatorType } from '../MainNavigator';
+import { RouteName } from '../routes/RouteName';
 
 interface ShowItem {
   title: string;
@@ -20,6 +22,8 @@ interface ShowItem {
 
 const HomeScreen = () => {
   const navigation = useNavigation();
+  const routeParams =
+    useRoute<RouteProp<MainNaivgatorType, RouteName.HomeScreen>>()?.params;
 
   const [ongoingShows, setOngoingShows] = useState<ShowItem[]>([
     {
@@ -157,9 +161,11 @@ const HomeScreen = () => {
 
   return (
     <SafeAreaView style={{flex: 1}}>
-      <View style={{flex: 1, backgroundColor: '#000'}}>
+      <View style={{flex: 1, backgroundColor: '#fafafa', padding: 10}}>
         <View style={{padding: 20}}>
-          <Text style={{fontSize: 24, color: '#fff'}}>Hello Manasa</Text>
+          <Text style={{fontSize: 24, color: '#000000', fontWeight: 'bold'}}>
+            {routeParams?.name}
+          </Text>
           <Text style={{fontSize: 16, color: '#ccc'}}>
             Welcome to Art@IITGN Film Festival
           </Text>
