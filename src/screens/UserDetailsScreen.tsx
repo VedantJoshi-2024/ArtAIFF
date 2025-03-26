@@ -7,6 +7,7 @@ import {
     KeyboardAvoidingView,
     Pressable,
     ScrollView,
+    StyleSheet,
     Text,
     TextInput,
     View,
@@ -127,7 +128,7 @@ const UserDetailsScreen = () => {
 
   return (
     <KeyboardAvoidingView
-      style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}
+      style={styles.container}
       behavior={'padding'}>
       <Pressable onPress={Keyboard.dismiss} style={{flex: 1}}>
         <ScrollView
@@ -158,8 +159,7 @@ const UserDetailsScreen = () => {
             </Text>
             <TextInput
               style={{
-                backgroundColor: 'white',
-                borderRadius: 10,
+                ...styles.input,
                 marginBottom: nameError ? 5 : 20,
               }}
               value={name}
@@ -176,8 +176,7 @@ const UserDetailsScreen = () => {
             </Text>
             <TextInput
               style={{
-                backgroundColor: 'white',
-                borderRadius: 10,
+                ...styles.input,
                 marginBottom: contactError ? 5 : 20,
               }}
               value={contact}
@@ -191,13 +190,8 @@ const UserDetailsScreen = () => {
           </View>
           <Pressable
             onPress={onPressSubmit}
-            style={{
-              marginTop: 20,
-              padding: 15,
-              backgroundColor: '#1F299B',
-              borderRadius: 10,
-            }}>
-            <Text style={{fontSize: 24, color: 'white', fontWeight: 'bold'}}>
+            style={styles.button}>
+            <Text style={styles.buttonText}>
               {'Submit'}
             </Text>
           </Pressable>
@@ -206,5 +200,30 @@ const UserDetailsScreen = () => {
     </KeyboardAvoidingView>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#1E1E1E', // Dark background
+  },
+  input: {
+    backgroundColor: '#333333', // Dark gray background
+    borderRadius: 10,
+    color: '#FFFFFF', // White text
+  },
+  button: {
+    marginTop: 20,
+    padding: 15,
+    backgroundColor: '#6528FF', // Purple background
+    borderRadius: 10,
+  },
+  buttonText: {
+    fontSize: 24,
+    color: '#FFFFFF', // White text
+    fontWeight: 'bold',
+  },
+});
 
 export default UserDetailsScreen;

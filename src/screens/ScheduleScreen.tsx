@@ -1,221 +1,189 @@
-import React from 'react';
-import {View, Text, FlatList, ScrollView} from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import React, { useRef, useState } from 'react';
+import {
+  Dimensions,
+  FlatList,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
+import BackIcon from '../assets/icons/BackIcon';
+import { MainNaivgatorType } from '../MainNavigator';
+import scheduleData from '../staticData/Schedule';
 
-interface ScheduleItem {
-  time: string;
-  title: string;
-  subtitle: string;
-  locations: string[];
-}
+const getLocationBackgroundColor = (location: string) => {
+  switch (location) {
+    case 'AB-10 103':
+      return '#5B26FA';
+    case 'New PC (Panchangana)':
+      return '#FFD700';
+    case 'Jibaben Patel (Kanisa) Memorial Auditorium':
+      return '#FF00FF';
+    default:
+      return '#FFFFFF'; // Default White
+  }
+};
 
 const ScheduleScreen = () => {
-  const scheduleData: {[key: string]: ScheduleItem[]} = {
-    '29 Mar': [
-      {
-        time: '9:15 – 11:20',
-        title: 'Perfect Days',
-        subtitle: '',
-        locations: ['Jibaben Patel (Kanisa) Memorial Auditorium'],
-      },
-      {
-        time: '11:30 – 1:30',
-        title: 'Indian Film 1: Mithya (Kannada) + Q&A',
-        subtitle: '',
-        locations: ['Jibaben Patel (Kanisa) Memorial Auditorium'],
-      },
-      {
-        time: '11:30 – 1:30',
-        title: 'Short Film Block 1',
-        subtitle: '',
-        locations: ['AB-10 103'],
-      },
-      {
-        time: '2:00 – 3:40',
-        title: 'The 400 Blows',
-        subtitle: '',
-        locations: ['Jibaben Patel (Kanisa) Memorial Auditorium'],
-      },
-      {
-        time: '2:00 – 3:40',
-        title: 'Contempt',
-        subtitle: '',
-        locations: ['AB-10 103'],
-      },
-      {
-        time: '3:45 – 5:40',
-        title: 'Priscilla',
-        subtitle: '',
-        locations: ['Jibaben Patel (Kanisa) Memorial Auditorium'],
-      },
-      {
-        time: '3:45 – 5:40',
-        title:
-          'Panel Discussion (Sumanth Bhat & Jithin Isaac Thomas with Ahnas)',
-        subtitle: '',
-        locations: ['AB-10 103'],
-      },
-      {
-        time: '6:00 – 7:35',
-        title: 'Indian Film 2: Pattth (Malayalam) + Q&A (Jitin Isaac Verghese)',
-        subtitle: '',
-        locations: ['Jibaben Patel (Kanisa) Memorial Auditorium'],
-      },
-      {
-        time: '6:00 – 7:35',
-        title: 'Short Film Block 2',
-        subtitle: '',
-        locations: ['New PC (Panchangana)'],
-      },
-      {
-        time: '8:00 – 9:45',
-        title: 'A Summer’s Tale',
-        subtitle: '',
-        locations: ['Jibaben Patel (Kanisa) Memorial Auditorium'],
-      },
-      {
-        time: '8:00 – 9:45',
-        title: 'Petite Maman',
-        subtitle: '',
-        locations: ['AB-10 103'],
-      },
-      {
-        time: '8:00 – 9:45',
-        title: 'Grand Theft Hamlet (GTA)',
-        subtitle: '',
-        locations: ['New PC (Panchangana)'],
-      },
-    ],
-    '30 Mar': [
-      {
-        time: '9:30 – 11:15',
-        title: 'Close',
-        subtitle: '',
-        locations: ['Jibaben Patel (Kanisa) Memorial Auditorium'],
-      },
-      {
-        time: '11:30 – 1:30',
-        title: 'Guras',
-        subtitle: '',
-        locations: ['Jibaben Patel (Kanisa) Memorial Auditorium'],
-      },
-      {
-        time: '11:30 – 1:30',
-        title: 'Masterclass on Directing Actors (Pushpendra Singh)',
-        subtitle: '',
-        locations: ['AB-10 103'],
-      },
-      {
-        time: '2:00 – 4:00',
-        title: 'Rapture (Dominic Sangma) + Q&A with Cinematographer',
-        subtitle: '',
-        locations: ['Jibaben Patel (Kanisa) Memorial Auditorium'],
-      },
-      {
-        time: '4:00 – 6:00',
-        title: 'Shiva Baby',
-        subtitle: '',
-        locations: ['Jibaben Patel (Kanisa) Memorial Auditorium'],
-      },
-      {
-        time: '4:00 – 6:00',
-        title: 'Masterclass on Cinematography (Tojo Xavier)',
-        subtitle: '',
-        locations: ['AB-10 103'],
-      },
-      {
-        time: '6:00 – 7:35',
-        title: 'Pearl of the Desert (Pushpendra Singh)',
-        subtitle: '',
-        locations: ['Jibaben Patel (Kanisa) Memorial Auditorium'],
-      },
-      {
-        time: '6:00 – 7:35',
-        title: 'Short Film Block 3',
-        subtitle: '',
-        locations: ['New PC (Panchangana)'],
-      },
-      {
-        time: '8:00 – 9:45',
-        title: 'Jules and Jim',
-        subtitle: '',
-        locations: ['Jibaben Patel (Kanisa) Memorial Auditorium'],
-      },
-      {
-        time: '8:00 – 9:45',
-        title: 'Short Films Block 4',
-        subtitle: '',
-        locations: ['AB-10 103'],
-      },
-      {
-        time: '8:00 – 9:45',
-        title: 'Zazie in the Metro',
-        subtitle: '',
-        locations: ['New PC (Panchangana)'],
-      },
-    ],
-    '31 Mar': [
-      {
-        time: '9:30 – 11:20',
-        title: 'Second Chance (Subhadra Mahajan) + Q&A',
-        subtitle: '',
-        locations: ['Jibaben Patel (Kanisa) Memorial Auditorium'],
-      },
-      {
-        time: '11:30 – 1:10',
-        title: 'Alphaville',
-        subtitle: '',
-        locations: ['Jibaben Patel (Kanisa) Memorial Auditorium'],
-      },
-      {
-        time: '11:30 – 1:10',
-        title: 'Short Film Block 5',
-        subtitle: '',
-        locations: ['AB-10 103'],
-      },
-      {
-        time: '2:00 – 3:40',
-        title: 'Hiroshima Mon Amour',
-        subtitle: '',
-        locations: ['Jibaben Patel (Kanisa) Memorial Auditorium'],
-      },
-      {
-        time: '2:00 – 3:40',
-        title: 'Short Film Block 6',
-        subtitle: '',
-        locations: ['AB-10 103'],
-      },
-      {
-        time: '4:00 – 6:00',
-        title: 'Closing Ceremony',
-        subtitle: '',
-        locations: ['Jibaben Patel (Kanisa) Memorial Auditorium'],
-      },
-    ],
+  const scheduleDates = Object.keys(scheduleData);
+  const navigation =
+    useNavigation<NativeStackNavigationProp<MainNaivgatorType>>();
+
+  const [index, setIndex] = useState(0); // State to track the selected tab
+  const scrollViewRef = useRef<ScrollView>(null); // Ref for the ScrollView
+  const screenWidth = Dimensions.get('window').width; // Get screen width
+
+  const navigateToPrevious = () => navigation.goBack();
+
+  const handleTabPress = (tabIndex: number) => {
+    setIndex(tabIndex);
+    scrollViewRef.current?.scrollTo({
+      x: tabIndex * screenWidth,
+      animated: true,
+    });
+  };
+
+  const handleScroll = (event: any) => {
+    const newIndex = Math.round(
+      event.nativeEvent.contentOffset.x / screenWidth,
+    );
+    if (newIndex !== index) {
+      setIndex(newIndex);
+    }
   };
 
   return (
-    <View style={{flex: 1, backgroundColor: '#000', padding: 20}}>
-      <FlatList
-        data={Object.keys(scheduleData)}
-        renderItem={({item}) => (
-          <View style={{padding: 10, backgroundColor: '#333'}}>
-            <Text style={{fontSize: 18, color: '#fff'}}>{item}</Text>
-            {scheduleData[item].map((scheduleItem, index) => (
-              <View key={index} style={{padding: 10}}>
-                <Text style={{fontSize: 16, color: '#fff'}}>
-                  {scheduleItem.title}
-                </Text>
-                <Text style={{fontSize: 14, color: '#ccc'}}>
-                  {scheduleItem.time} | {scheduleItem.locations.join(', ')}
-                </Text>
-              </View>
-            ))}
+    <View style={{flex: 1, backgroundColor: '#1E1E1E', paddingTop: 40}}>
+      {/* Header */}
+      <Pressable onPress={navigateToPrevious} style={styles.header}>
+        <BackIcon size={30} color={'#FFFFFF'} />
+        <Text style={[styles.title, {marginLeft: 20}]}>{'Schedule'}</Text>
+      </Pressable>
+      {/* Tab Navigation */}
+      <View style={styles.tabContainer}>
+        {scheduleDates.map((date, tabIndex) => {
+          const isSelected = index === tabIndex;
+          return (
+            <TouchableOpacity
+              key={date}
+              style={[
+                styles.tab,
+                {borderBottomColor: isSelected ? '#FF00FF' : '#1E1E1E'},
+              ]}
+              onPress={() => handleTabPress(tabIndex)}>
+              <Text
+                style={[
+                  styles.tabText,
+                  {color: isSelected ? '#FFFFFF' : '#B3B3B3'},
+                ]}>
+                {date}
+              </Text>
+            </TouchableOpacity>
+          );
+        })}
+      </View>
+
+      {/* Tab Content */}
+      <ScrollView
+        ref={scrollViewRef}
+        horizontal
+        pagingEnabled
+        showsHorizontalScrollIndicator={false}
+        onScroll={handleScroll}
+        scrollEventThrottle={16}>
+        {scheduleDates.map((date, tabIndex) => (
+          <View key={date} style={{width: screenWidth}}>
+            <FlatList
+              data={scheduleData[date]}
+              keyExtractor={(item, idx) => idx.toString()}
+              renderItem={({item}) => (
+                <View style={[styles.scheduleItem]}>
+                  <View
+                    style={[
+                      styles.dot,
+                      {
+                        backgroundColor: getLocationBackgroundColor(
+                          item.locations[0],
+                        ),
+                      },
+                    ]}
+                  />
+                  <View style={styles.textContainer}>
+                    <Text style={styles.title}>{item.title}</Text>
+                    <Text style={styles.details}>
+                      {item.time} | {item.locations.join(', ')}
+                    </Text>
+                  </View>
+                </View>
+              )}
+              contentContainerStyle={{paddingVertical: 10}}
+            />
           </View>
-        )}
-        keyExtractor={item => item}
-      />
+        ))}
+      </ScrollView>
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  tabContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    borderBottomWidth: 1,
+    marginBottom: 10,
+    paddingHorizontal: 20,
+    backgroundColor: '#1E1E1E', // Dark background
+  },
+  header: {
+    padding: 20,
+    backgroundColor: '#333333', // Dark gray background
+    borderBottomWidth: 1,
+    borderBottomColor: '#444444', // Slightly lighter gray for separation
+    alignItems: 'center',
+    flexDirection: 'row',
+    marginBottom: 30,
+  },
+  tab: {
+    padding: 10,
+    borderBottomWidth: 2.5,
+  },
+  tabText: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#FFFFFF', // White text
+  },
+  scheduleItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 10,
+    marginVertical: 5,
+    borderRadius: 8,
+    marginHorizontal: 20,
+    backgroundColor: '#333333', // Dark gray background
+  },
+  dot: {
+    width: 10,
+    height: 10,
+    borderRadius: 5,
+    backgroundColor: '#FF00FF', // Pink dot
+    marginRight: 10,
+  },
+  textContainer: {
+    flex: 1,
+  },
+  title: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#FFFFFF', // White text
+  },
+  details: {
+    fontSize: 14,
+    color: '#B3B3B3', // Light gray text
+  },
+});
 
 export default ScheduleScreen;
