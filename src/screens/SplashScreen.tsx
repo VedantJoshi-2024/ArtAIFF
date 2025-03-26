@@ -15,30 +15,32 @@ const SplashScreen = () => {
     try {
       const name = await AsyncStorage.getItem('name');
       const contact = await AsyncStorage.getItem('contact');
-      if (name && contact) {
-        setName(name);
-        setContact(contact);
-        return true;
+      if (name && contact && name.length > 0 && contact.length > 0) {
+        return { name, contact };
       }
-      setName('');
-      setContact('');
-      return false;
+      return null;
     } catch (e) {
       console.log(e);
-      setName('');
-      setContact('');
-      return false;
+      return null;
     }
   };
 
   React.useEffect(() => {
-    setTimeout(async () => {
-      if (await isUserDetailsAvailable()) {
-        navigation.replace(RouteName.HomeScreen, {name, contact});
+    (async () => {
+      const userDetails = await isUserDetailsAvailable();
+      if (userDetails) {
+        const { name, contact } = userDetails;
+        setName(name);
+        setContact(contact);
+        setTimeout(() => {
+          navigation.replace(RouteName.HomeScreen, { name, contact });
+        }, 500);
       } else {
-        navigation.replace(RouteName.UserDetailsScreen);
+        setTimeout(() => {
+          navigation.replace(RouteName.UserDetailsScreen);
+        }, 500);
       }
-    }, 500);
+    })();
   }, []);
 
   return (
