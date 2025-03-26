@@ -1,15 +1,16 @@
-import React, {useState, useEffect} from 'react';
+import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import React, { useState } from 'react';
 import {
-  View,
-  Text,
-  Button,
   FlatList,
-  TouchableOpacity,
+  Linking,
+  Pressable,
   SafeAreaView,
+  Text,
+  TouchableOpacity,
+  View
 } from 'react-native';
-import {TabView, TabBar} from 'react-native-tab-view';
-import {Linking} from 'react-native';
-import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
+import MapAnnotationIcon from '../assets/icons/MapAnnotationIcon';
 import { MainNaivgatorType } from '../MainNavigator';
 import { RouteName } from '../routes/RouteName';
 
@@ -21,7 +22,8 @@ interface ShowItem {
 }
 
 const HomeScreen = () => {
-  const navigation = useNavigation();
+  const navigation =
+    useNavigation<NativeStackNavigationProp<MainNaivgatorType>>();
   const routeParams =
     useRoute<RouteProp<MainNaivgatorType, RouteName.HomeScreen>>()?.params;
 
@@ -75,14 +77,13 @@ const HomeScreen = () => {
         style={{
           flexDirection: 'row',
           justifyContent: 'space-around',
-          backgroundColor: '#000',
+          backgroundColor: '#acacac',
           paddingVertical: 10,
         }}>
         {tabs.map((tab: any, i: number) => (
-          <TouchableOpacity key={tab.key} onPress={() => onPress(i)}>
+          <TouchableOpacity key={tab.key} onPress={onPress}>
             <Text
               style={{
-                color: tabIndex === i ? '#6528FF' : '#ccc',
                 fontSize: 16,
               }}>
               {tab.title}
@@ -94,41 +95,31 @@ const HomeScreen = () => {
   };
 
   const renderScene = ({route}: any) => {
-    if (route.key === 'ongoing') {
-      return (
-        <FlatList
-          data={ongoingShows}
-          renderItem={({item}) => (
-            <View style={{padding: 10, backgroundColor: '#333'}}>
-              <Text style={{fontSize: 16, fontWeight: 'bold'}}>
-                {item.title}
-              </Text>
-              <Text>
-                {item.location} | {item.time} | {item.duration}
-              </Text>
+    return (
+      <FlatList
+        data={route.key === 'ongoing' ? ongoingShows : comingNextShows}
+        ItemSeparatorComponent={() => <View style={{height: 10}} />}
+        contentContainerStyle={{paddingTop: 10}}
+        renderItem={({item, index}: {item: ShowItem; index: number}) => (
+          <View
+            style={{
+              paddingVertical: 20,
+              paddingHorizontal: 10,
+              borderRadius: 10,
+              backgroundColor: '#aaaffc4f',
+            }}
+            key={index}>
+            <Text style={{fontSize: 16, fontWeight: 'bold'}}>{item.title}</Text>
+            <View style={{flexDirection: 'row'}}>
+              <Text style={{marginLeft: 0}}>{item.location}</Text>
+              <Text style={{marginLeft: 10}}>{item.time}</Text>
+              <Text style={{marginLeft: 10}}>{item.duration}</Text>
             </View>
-          )}
-          keyExtractor={(item, index) => index.toString()}
-        />
-      );
-    } else if (route.key === 'comingNext') {
-      return (
-        <FlatList
-          data={comingNextShows}
-          renderItem={({item}) => (
-            <View style={{padding: 10, backgroundColor: '#333'}}>
-              <Text style={{fontSize: 16, fontWeight: 'bold'}}>
-                {item.title}
-              </Text>
-              <Text>
-                {item.location} | {item.time} | {item.duration}
-              </Text>
-            </View>
-          )}
-          keyExtractor={(item, index) => index.toString()}
-        />
-      );
-    }
+          </View>
+        )}
+        keyExtractor={(item, index) => index.toString()}
+      />
+    );
   };
 
   const [routes] = useState([
@@ -136,7 +127,9 @@ const HomeScreen = () => {
     {key: 'comingNext', title: 'COMING NEXT'},
   ]);
 
-  const navigationState = {index, routes};
+  const navigateToSchedule = () =>
+    navigation.navigate(RouteName.ScheduleScreen);
+  const navigateToFAQ = () => navigation.navigate(RouteName.FAQScreen);
 
   const openLocationInMap = async (location: string) => {
     let url = '';
@@ -161,13 +154,17 @@ const HomeScreen = () => {
 
   return (
     <SafeAreaView style={{flex: 1}}>
-      <View style={{flex: 1, backgroundColor: '#fafafa', padding: 10}}>
-        <View style={{padding: 20}}>
-          <Text style={{fontSize: 24, color: '#000000', fontWeight: 'bold'}}>
+      <View style={{flex: 1, backgroundColor: '#fafafa', padding: 30}}>
+        <View style={{padding: 20, width: '100%'}}>
+          <Text style={{fontSize: 44, color: '#000000', fontWeight: 'bold'}}>
             {routeParams?.name}
           </Text>
-          <Text style={{fontSize: 16, color: '#ccc'}}>
-            Welcome to Art@IITGN Film Festival
+          <Text style={{fontSize: 16, color: '#0c0c0c'}}>
+            {'Welcome to Art@IITGN Film Festival'}
+          </Text>
+
+          <Text style={{fontWeight: 'bold', fontSize: 24, marginTop: 20}}>
+            {'Quick links:'}
           </Text>
           <View
             style={{
@@ -175,46 +172,133 @@ const HomeScreen = () => {
               justifyContent: 'space-between',
               marginVertical: 10,
             }}>
-            <Button
-              title="SCHEDULE"
-              onPress={() => navigation.navigate('Schedule' as never)}
-            />
-            <Button
-              title="FAQ"
-              onPress={() => navigation.navigate('FAQ' as never)}
-            />
+            <Pressable
+              style={{
+                borderRadius: 10,
+                padding: 15,
+                backgroundColor: '#aaaffc',
+                width: '48%',
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}
+              onPress={navigateToSchedule}>
+              <Text style={{color: '#6528FF', fontWeight: 600}}>
+                {'Check schedule'}
+              </Text>
+            </Pressable>
+            <Pressable
+              style={{
+                borderRadius: 10,
+                padding: 15,
+                backgroundColor: '#aaaffc',
+                width: '48%',
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}
+              onPress={navigateToFAQ}>
+              <Text style={{color: '#6528FF', fontWeight: 600}}>{'FAQs'}</Text>
+            </Pressable>
           </View>
         </View>
 
-        <TabView
-          navigationState={navigationState}
-          renderScene={renderScene}
-          renderTabBar={renderTabBar}
-          onIndexChange={setIndex}
-        />
+        <View
+          style={{
+            flexDirection: 'row',
+            paddingHorizontal: 24,
+            justifyContent: 'space-between',
+            width: '100%',
+            borderBottomWidth: 1,
+          }}>
+          {routes.map((route_r, route_i) => {
+            const isSelected = index === route_i;
+            return (
+              <TouchableOpacity
+                key={route_r.key}
+                style={{
+                  padding: 10,
+                  borderBottomWidth: 2.5,
+                  borderBottomColor: isSelected ? '#6528FF' : '#fafafa',
+                }}
+                onPress={() => setIndex(route_i)}>
+                <Text
+                  style={{
+                    color: '#323222',
+                  }}>
+                  {route_r.title}
+                </Text>
+              </TouchableOpacity>
+            );
+          })}
+        </View>
+        <View style={{marginTop: 8}}>
+          {renderScene({route: routes[index]})}
+        </View>
 
-        <View style={{padding: 10}}>
-          <Text style={{fontSize: 16, color: '#ccc', fontWeight: 'bold'}}>
-            Locations
+        <View
+          style={{
+            padding: 10,
+            justifyContent: 'flex-end',
+            alignItems: 'flex-start',
+          }}>
+          <Text style={{fontWeight: 'bold', fontSize: 24, marginTop: 20}}>
+            {'Locations:'}
           </Text>
           <View
             style={{
-              flexDirection: 'row',
+              flexDirection: 'column',
               justifyContent: 'space-around',
               marginVertical: 10,
             }}>
-            <TouchableOpacity onPress={() => openLocationInMap('AB-10 103')}>
-              <Text style={{color: '#fff'}}>AB-10 103</Text>
+            <TouchableOpacity
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                marginTop: 10,
+              }}
+              onPress={() => openLocationInMap('AB-10 103')}>
+              <MapAnnotationIcon />
+              <Text
+                style={{
+                  color: '#1F299B',
+                  textDecorationLine: 'underline',
+                  marginLeft: 10,
+                }}>
+                AB-10 103
+              </Text>
             </TouchableOpacity>
             <TouchableOpacity
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                marginTop: 10,
+              }}
               onPress={() => openLocationInMap('New PC (Panchangana)')}>
-              <Text style={{color: '#fff'}}>New PC (Panchangana)</Text>
+              <MapAnnotationIcon />
+              <Text
+                style={{
+                  color: '#1F299B',
+                  textDecorationLine: 'underline',
+                  marginLeft: 10,
+                }}>
+                New PC (Panchangana)
+              </Text>
             </TouchableOpacity>
             <TouchableOpacity
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                marginTop: 10,
+              }}
               onPress={() =>
                 openLocationInMap('Jibaben Patel (Kanisa) Memorial Auditorium')
               }>
-              <Text style={{color: '#fff'}}>
+              <MapAnnotationIcon />
+              <Text
+                style={{
+                  color: '#1F299B',
+                  textDecorationLine: 'underline',
+                  marginLeft: 10,
+                }}>
                 Jibaben Patel (Kanisa) Memorial Auditorium
               </Text>
             </TouchableOpacity>
