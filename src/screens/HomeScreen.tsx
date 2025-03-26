@@ -6,6 +6,7 @@ import {
   Linking,
   Pressable,
   SafeAreaView,
+  StyleSheet,
   Text,
   TouchableOpacity,
   View
@@ -66,34 +67,6 @@ const HomeScreen = () => {
 
   const [index, setIndex] = useState(0);
 
-  const renderTabBar = ({tabIndex, onPress}: any) => {
-    const tabs = [
-      {key: 'ongoing', title: 'ONGOING'},
-      {key: 'comingNext', title: 'COMING NEXT'},
-    ];
-
-    return (
-      <View
-        style={{
-          flexDirection: 'row',
-          justifyContent: 'space-around',
-          backgroundColor: '#acacac',
-          paddingVertical: 10,
-        }}>
-        {tabs.map((tab: any, i: number) => (
-          <TouchableOpacity key={tab.key} onPress={onPress}>
-            <Text
-              style={{
-                fontSize: 16,
-              }}>
-              {tab.title}
-            </Text>
-          </TouchableOpacity>
-        ))}
-      </View>
-    );
-  };
-
   const renderScene = ({route}: any) => {
     return (
       <FlatList
@@ -153,152 +126,67 @@ const HomeScreen = () => {
   };
 
   return (
-    <SafeAreaView style={{flex: 1}}>
-      <View style={{flex: 1, backgroundColor: '#fafafa', padding: 30}}>
-        <View style={{padding: 20, width: '100%'}}>
-          <Text style={{fontSize: 44, color: '#000000', fontWeight: 'bold'}}>
-            {routeParams?.name}
-          </Text>
-          <Text style={{fontSize: 16, color: '#0c0c0c'}}>
+    <SafeAreaView style={styles.container}>
+      <View style={styles.innerContainer}>
+        <View style={styles.header}>
+          <Text style={styles.title}>{routeParams?.name}</Text>
+          <Text style={styles.subtitle}>
             {'Welcome to Art@IITGN Film Festival'}
           </Text>
 
-          <Text style={{fontWeight: 'bold', fontSize: 24, marginTop: 20}}>
-            {'Quick links:'}
-          </Text>
-          <View
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              marginVertical: 10,
-            }}>
-            <Pressable
-              style={{
-                borderRadius: 10,
-                padding: 15,
-                backgroundColor: '#aaaffc',
-                width: '48%',
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}
-              onPress={navigateToSchedule}>
-              <Text style={{color: '#6528FF', fontWeight: 600}}>
-                {'Check schedule'}
-              </Text>
+          <Text style={styles.quickLinksTitle}>{'Quick links:'}</Text>
+          <View style={styles.quickLinksContainer}>
+            <Pressable style={styles.quickLinkButton} onPress={navigateToSchedule}>
+              <Text style={styles.quickLinkText}>{'Check schedule'}</Text>
             </Pressable>
-            <Pressable
-              style={{
-                borderRadius: 10,
-                padding: 15,
-                backgroundColor: '#aaaffc',
-                width: '48%',
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}
-              onPress={navigateToFAQ}>
-              <Text style={{color: '#6528FF', fontWeight: 600}}>{'FAQs'}</Text>
+            <Pressable style={styles.quickLinkButton} onPress={navigateToFAQ}>
+              <Text style={styles.quickLinkText}>{'FAQs'}</Text>
             </Pressable>
           </View>
         </View>
 
-        <View
-          style={{
-            flexDirection: 'row',
-            paddingHorizontal: 24,
-            justifyContent: 'space-between',
-            width: '100%',
-            borderBottomWidth: 1,
-          }}>
+        <View style={styles.tabContainer}>
           {routes.map((route_r, route_i) => {
             const isSelected = index === route_i;
             return (
               <TouchableOpacity
                 key={route_r.key}
-                style={{
-                  padding: 10,
-                  borderBottomWidth: 2.5,
-                  borderBottomColor: isSelected ? '#6528FF' : '#fafafa',
-                }}
+                style={[
+                  styles.tabButton,
+                  isSelected && styles.selectedTabButton,
+                ]}
                 onPress={() => setIndex(route_i)}>
-                <Text
-                  style={{
-                    color: '#323222',
-                  }}>
-                  {route_r.title}
-                </Text>
+                <Text style={styles.tabText}>{route_r.title}</Text>
               </TouchableOpacity>
             );
           })}
         </View>
-        <View style={{marginTop: 8}}>
-          {renderScene({route: routes[index]})}
+        <View style={styles.sceneContainer}>
+          {renderScene({ route: routes[index] })}
         </View>
 
-        <View
-          style={{
-            padding: 10,
-            justifyContent: 'flex-end',
-            alignItems: 'flex-start',
-          }}>
-          <Text style={{fontWeight: 'bold', fontSize: 24, marginTop: 20}}>
-            {'Locations:'}
-          </Text>
-          <View
-            style={{
-              flexDirection: 'column',
-              justifyContent: 'space-around',
-              marginVertical: 10,
-            }}>
+        <View style={styles.locationsContainer}>
+          <Text style={styles.locationsTitle}>{'Locations:'}</Text>
+          <View style={styles.locationList}>
             <TouchableOpacity
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                marginTop: 10,
-              }}
+              style={styles.locationItem}
               onPress={() => openLocationInMap('AB-10 103')}>
               <MapAnnotationIcon />
-              <Text
-                style={{
-                  color: '#1F299B',
-                  textDecorationLine: 'underline',
-                  marginLeft: 10,
-                }}>
-                AB-10 103
-              </Text>
+              <Text style={styles.locationText}>AB-10 103</Text>
             </TouchableOpacity>
             <TouchableOpacity
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                marginTop: 10,
-              }}
+              style={styles.locationItem}
               onPress={() => openLocationInMap('New PC (Panchangana)')}>
               <MapAnnotationIcon />
-              <Text
-                style={{
-                  color: '#1F299B',
-                  textDecorationLine: 'underline',
-                  marginLeft: 10,
-                }}>
-                New PC (Panchangana)
-              </Text>
+              <Text style={styles.locationText}>New PC (Panchangana)</Text>
             </TouchableOpacity>
             <TouchableOpacity
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                marginTop: 10,
-              }}
+              style={styles.locationItem}
               onPress={() =>
                 openLocationInMap('Jibaben Patel (Kanisa) Memorial Auditorium')
               }>
               <MapAnnotationIcon />
-              <Text
-                style={{
-                  color: '#1F299B',
-                  textDecorationLine: 'underline',
-                  marginLeft: 10,
-                }}>
+              <Text style={styles.locationText}>
                 Jibaben Patel (Kanisa) Memorial Auditorium
               </Text>
             </TouchableOpacity>
@@ -308,5 +196,97 @@ const HomeScreen = () => {
     </SafeAreaView>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  innerContainer: {
+    flex: 1,
+    backgroundColor: '#fafafa',
+    padding: 30,
+  },
+  header: {
+    padding: 20,
+    width: '100%',
+  },
+  title: {
+    fontSize: 44,
+    color: '#000000',
+    fontWeight: 'bold',
+  },
+  subtitle: {
+    fontSize: 16,
+    color: '#0c0c0c',
+  },
+  quickLinksTitle: {
+    fontWeight: 'bold',
+    fontSize: 24,
+    marginTop: 20,
+  },
+  quickLinksContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginVertical: 10,
+  },
+  quickLinkButton: {
+    borderRadius: 10,
+    padding: 15,
+    backgroundColor: '#aaaffc',
+    width: '48%',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  quickLinkText: {
+    color: '#6528FF',
+    fontWeight: '600',
+  },
+  tabContainer: {
+    flexDirection: 'row',
+    paddingHorizontal: 24,
+    justifyContent: 'space-between',
+    width: '100%',
+    borderBottomWidth: 1,
+  },
+  tabButton: {
+    padding: 10,
+    borderBottomWidth: 2.5,
+    borderBottomColor: '#fafafa',
+  },
+  selectedTabButton: {
+    borderBottomColor: '#6528FF',
+  },
+  tabText: {
+    color: '#323222',
+  },
+  sceneContainer: {
+    marginTop: 8,
+  },
+  locationsContainer: {
+    padding: 10,
+    justifyContent: 'flex-end',
+    alignItems: 'flex-start',
+  },
+  locationsTitle: {
+    fontWeight: 'bold',
+    fontSize: 24,
+    marginTop: 20,
+  },
+  locationList: {
+    flexDirection: 'column',
+    justifyContent: 'space-around',
+    marginVertical: 10,
+  },
+  locationItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 10,
+  },
+  locationText: {
+    color: '#1F299B',
+    textDecorationLine: 'underline',
+    marginLeft: 10,
+  },
+});
 
 export default HomeScreen;
