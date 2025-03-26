@@ -11,22 +11,28 @@ const FAQScreen = () => {
   const navigation =
     useNavigation<NativeStackNavigationProp<MainNaivgatorType>>();
   const navigateToPrevious = () => navigation.goBack();
-  
+
   return (
     <View style={styles.container}>
       {/* Header */}
       <Pressable onPress={navigateToPrevious} style={styles.header}>
         <BackIcon size={30} color={'#FFFFFF'} />
-        <Text style={[styles.title, {marginLeft: 20}]}>{'FAQs'}</Text>
+        <Text style={[styles.title, { marginLeft: 20 }]}>{'FAQs'}</Text>
       </Pressable>
 
-      <Text style={[styles.title, {marginLeft: 20}]}>
-        {'Art@IITGN Film Festival - Frequently Asked Questions (FAQs)'}
+      <Text style={[styles.subtitle, { paddingHorizontal: 20 }]}>
+        {'Art@IITGN Film Festival – Frequently Asked Questions (FAQs)'}
       </Text>
+
       {/* FAQ List */}
       <ScrollView contentContainerStyle={styles.scrollContainer}>
-        {faqItems.map((item, index) => (
-          <FAQComponent key={index} item={item} />
+        {faqItems.map((category, index) => (
+          <View key={index} style={styles.categoryContainer}>
+            <Text style={styles.categoryTitle}>{category.category}</Text>
+            {category.faqs.map((faq, faqIndex) => (
+              <FAQComponent key={faqIndex} item={faq} />
+            ))}
+          </View>
         ))}
       </ScrollView>
     </View>
@@ -36,7 +42,6 @@ const FAQScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingVertical: 60,
     backgroundColor: '#1E1E1E', // Dark background
   },
   header: {
@@ -46,7 +51,7 @@ const styles = StyleSheet.create({
     borderBottomColor: '#444444', // Slightly lighter gray for separation
     alignItems: 'center',
     flexDirection: 'row',
-    marginBottom: 30,
+    marginBottom: 20,
   },
   title: {
     fontSize: 20,
@@ -54,8 +59,24 @@ const styles = StyleSheet.create({
     color: '#FFFFFF', // White text
     textAlign: 'left',
   },
+  subtitle: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#B3B3B3', // Light gray text
+    marginBottom: 20,
+  },
   scrollContainer: {
-    padding: 20,
+    paddingHorizontal: 20,
+    paddingBottom: 20,
+  },
+  categoryContainer: {
+    marginBottom: 30,
+  },
+  categoryTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#FFFFFF', // White text
+    marginBottom: 10,
   },
 });
 

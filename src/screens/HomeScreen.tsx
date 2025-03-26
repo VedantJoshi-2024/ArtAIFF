@@ -6,6 +6,7 @@ import {
   Linking,
   Pressable,
   SafeAreaView,
+  ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -127,72 +128,78 @@ const HomeScreen = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.innerContainer}>
-        <View style={styles.header}>
-          <Text style={styles.title}>{routeParams?.name}</Text>
-          <Text style={styles.subtitle}>
-            {'Welcome to Art@IITGN Film Festival'}
-          </Text>
+      <ScrollView contentContainerStyle={styles.scrollViewContent}>
+        <View style={styles.innerContainer}>
+          <View style={styles.header}>
+            <Text style={styles.title}>{routeParams?.name}</Text>
+            <Text style={styles.subtitle}>
+              {'Welcome to Art@IITGN Film Festival'}
+            </Text>
 
-          <Text style={styles.quickLinksTitle}>{'Quick links:'}</Text>
-          <View style={styles.quickLinksContainer}>
-            <Pressable style={styles.quickLinkButton} onPress={navigateToSchedule}>
-              <Text style={styles.quickLinkText}>{'Check schedule'}</Text>
-            </Pressable>
-            <Pressable style={styles.quickLinkButton} onPress={navigateToFAQ}>
-              <Text style={styles.quickLinkText}>{'FAQs'}</Text>
-            </Pressable>
+            <Text style={styles.quickLinksTitle}>{'Quick links:'}</Text>
+            <View style={styles.quickLinksContainer}>
+              <Pressable
+                style={styles.quickLinkButton}
+                onPress={navigateToSchedule}>
+                <Text style={styles.quickLinkText}>{'Check schedule'}</Text>
+              </Pressable>
+              <Pressable style={styles.quickLinkButton} onPress={navigateToFAQ}>
+                <Text style={styles.quickLinkText}>{'FAQs'}</Text>
+              </Pressable>
+            </View>
           </View>
-        </View>
 
-        <View style={styles.tabContainer}>
-          {routes.map((route_r, route_i) => {
-            const isSelected = index === route_i;
-            return (
+          <View style={styles.tabContainer}>
+            {routes.map((route_r, route_i) => {
+              const isSelected = index === route_i;
+              return (
+                <TouchableOpacity
+                  key={route_r.key}
+                  style={[
+                    styles.tabButton,
+                    isSelected && styles.selectedTabButton,
+                  ]}
+                  onPress={() => setIndex(route_i)}>
+                  <Text style={styles.tabText}>{route_r.title}</Text>
+                </TouchableOpacity>
+              );
+            })}
+          </View>
+          <View style={styles.sceneContainer}>
+            {renderScene({ route: routes[index] })}
+          </View>
+
+          <View style={styles.locationsContainer}>
+            <Text style={styles.locationsTitle}>{'Locations:'}</Text>
+            <View style={styles.locationList}>
               <TouchableOpacity
-                key={route_r.key}
-                style={[
-                  styles.tabButton,
-                  isSelected && styles.selectedTabButton,
-                ]}
-                onPress={() => setIndex(route_i)}>
-                <Text style={styles.tabText}>{route_r.title}</Text>
+                style={styles.locationItem}
+                onPress={() => openLocationInMap('AB-10 103')}>
+                <MapAnnotationIcon />
+                <Text style={styles.locationText}>AB-10 103</Text>
               </TouchableOpacity>
-            );
-          })}
-        </View>
-        <View style={styles.sceneContainer}>
-          {renderScene({ route: routes[index] })}
-        </View>
-
-        <View style={styles.locationsContainer}>
-          <Text style={styles.locationsTitle}>{'Locations:'}</Text>
-          <View style={styles.locationList}>
-            <TouchableOpacity
-              style={styles.locationItem}
-              onPress={() => openLocationInMap('AB-10 103')}>
-              <MapAnnotationIcon />
-              <Text style={styles.locationText}>AB-10 103</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.locationItem}
-              onPress={() => openLocationInMap('New PC (Panchangana)')}>
-              <MapAnnotationIcon />
-              <Text style={styles.locationText}>New PC (Panchangana)</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.locationItem}
-              onPress={() =>
-                openLocationInMap('Jibaben Patel (Kanisa) Memorial Auditorium')
-              }>
-              <MapAnnotationIcon />
-              <Text style={styles.locationText}>
-                Jibaben Patel (Kanisa) Memorial Auditorium
-              </Text>
-            </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.locationItem}
+                onPress={() => openLocationInMap('New PC (Panchangana)')}>
+                <MapAnnotationIcon />
+                <Text style={styles.locationText}>New PC (Panchangana)</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.locationItem}
+                onPress={() =>
+                  openLocationInMap(
+                    'Jibaben Patel (Kanisa) Memorial Auditorium'
+                  )
+                }>
+                <MapAnnotationIcon />
+                <Text style={styles.locationText}>
+                  Jibaben Patel (Kanisa) Memorial Auditorium
+                </Text>
+              </TouchableOpacity>
+            </View>
           </View>
         </View>
-      </View>
+      </ScrollView>
     </SafeAreaView>
   );
 };
@@ -200,10 +207,11 @@ const HomeScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#121212', // Dark background
   },
   innerContainer: {
     flex: 1,
-    backgroundColor: '#fafafa',
+    backgroundColor: '#121212', // Dark background
     padding: 30,
   },
   header: {
@@ -212,16 +220,17 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 44,
-    color: '#000000',
+    color: '#FFFFFF', // White text
     fontWeight: 'bold',
   },
   subtitle: {
     fontSize: 16,
-    color: '#0c0c0c',
+    color: '#B3B3B3', // Light gray text
   },
   quickLinksTitle: {
     fontWeight: 'bold',
     fontSize: 24,
+    color: '#FFFFFF', // White text
     marginTop: 20,
   },
   quickLinksContainer: {
@@ -232,13 +241,13 @@ const styles = StyleSheet.create({
   quickLinkButton: {
     borderRadius: 10,
     padding: 15,
-    backgroundColor: '#aaaffc',
+    backgroundColor: '#1F1F1F', // Darker button background
     width: '48%',
     justifyContent: 'center',
     alignItems: 'center',
   },
   quickLinkText: {
-    color: '#6528FF',
+    color: '#BB86FC', // Accent color
     fontWeight: '600',
   },
   tabContainer: {
@@ -247,17 +256,18 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     width: '100%',
     borderBottomWidth: 1,
+    borderBottomColor: '#333333', // Darker border
   },
   tabButton: {
     padding: 10,
     borderBottomWidth: 2.5,
-    borderBottomColor: '#fafafa',
+    borderBottomColor: '#121212', // Match background
   },
   selectedTabButton: {
-    borderBottomColor: '#6528FF',
+    borderBottomColor: '#BB86FC', // Accent color for selected tab
   },
   tabText: {
-    color: '#323222',
+    color: '#FFFFFF', // White text
   },
   sceneContainer: {
     marginTop: 8,
@@ -270,6 +280,7 @@ const styles = StyleSheet.create({
   locationsTitle: {
     fontWeight: 'bold',
     fontSize: 24,
+    color: '#FFFFFF', // White text
     marginTop: 20,
   },
   locationList: {
@@ -283,9 +294,12 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   locationText: {
-    color: '#1F299B',
+    color: '#BB86FC', // Accent color
     textDecorationLine: 'underline',
     marginLeft: 10,
+  },
+  scrollViewContent: {
+    flexGrow: 1,
   },
 });
 

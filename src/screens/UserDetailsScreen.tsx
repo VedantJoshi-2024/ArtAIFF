@@ -127,73 +127,43 @@ const UserDetailsScreen = () => {
   };
 
   return (
-    <KeyboardAvoidingView
-      style={styles.container}
-      behavior={'padding'}>
-      <Pressable onPress={Keyboard.dismiss} style={{flex: 1}}>
+    <KeyboardAvoidingView style={styles.container} behavior={'padding'}>
+      <Pressable onPress={Keyboard.dismiss} style={styles.pressable}>
         <ScrollView
           showsVerticalScrollIndicator={false}
           keyboardShouldPersistTaps={'always'}
-          contentContainerStyle={{
-            flex: 1,
-            justifyContent: 'center',
-            alignItems: 'center',
-            backgroundColor: '#fafafa',
-            paddingHorizontal: 34,
-          }}>
-          <Text
-            style={{fontSize: 32, marginBottom: 40, textAlign: 'center'}}
-            numberOfLines={2}>
-            {'Welcome to ART@IITGN \nFilm Festival'}
+          contentContainerStyle={styles.scrollViewContent}>
+          <Text style={styles.title}>
+            {'Welcome to ART@IITGN Film Festival'}
           </Text>
-          <View
-            style={{
-              backgroundColor: '#afbfa1',
-              width: '100%',
-              borderRadius: 10,
-              padding: 40,
-            }}>
-            <Text style={{fontSize: 24, marginBottom: 20}}>
+          <View style={styles.inputContainer}>
+            <Text style={styles.label}>
               {'Enter your name:'}
-              <Text style={{color: '#ff0a0a'}}>{'\x20*'}</Text>
+              <Text style={styles.required}>{'\x20*'}</Text>
             </Text>
             <TextInput
-              style={{
-                ...styles.input,
-                marginBottom: nameError ? 5 : 20,
-              }}
+              style={[styles.input, nameError ? styles.inputError : null]}
               value={name}
               onChangeText={onChangeName}
             />
             {nameError ? (
-              <Text style={{color: '#ff0a0a', marginBottom: 15}}>
-                {nameError}
-              </Text>
+              <Text style={styles.errorText}>{nameError}</Text>
             ) : null}
-            <Text style={{fontSize: 24, marginBottom: 20}}>
+            <Text style={styles.label}>
               {'Enter your contact information:'}
-              <Text style={{color: '#ff0a0a'}}>{'\x20*'}</Text>
+              <Text style={styles.required}>{'\x20*'}</Text>
             </Text>
             <TextInput
-              style={{
-                ...styles.input,
-                marginBottom: contactError ? 5 : 20,
-              }}
+              style={[styles.input, contactError ? styles.inputError : null]}
               value={contact}
               onChangeText={onChangeContact}
             />
             {contactError ? (
-              <Text style={{color: '#ff0a0a', marginBottom: 15}}>
-                {contactError}
-              </Text>
+              <Text style={styles.errorText}>{contactError}</Text>
             ) : null}
           </View>
-          <Pressable
-            onPress={onPressSubmit}
-            style={styles.button}>
-            <Text style={styles.buttonText}>
-              {'Submit'}
-            </Text>
+          <Pressable onPress={onPressSubmit} style={styles.button}>
+            <Text style={styles.buttonText}>{'Submit'}</Text>
           </Pressable>
         </ScrollView>
       </Pressable>
@@ -206,23 +176,65 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#1E1E1E', // Dark background
+    backgroundColor: '#1E1E1E',
+  },
+  pressable: {
+    flex: 1,
+  },
+  scrollViewContent: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#1E1E1E',
+    paddingHorizontal: 34,
+  },
+  title: {
+    fontSize: 32,
+    marginBottom: 40,
+    textAlign: 'center',
+    color: '#FFFFFF',
+    width: '100%',
+  },
+  inputContainer: {
+    backgroundColor: '#ACACAC',
+    width: '100%',
+    borderRadius: 10,
+    padding: 40,
+  },
+  label: {
+    fontSize: 24,
+    marginBottom: 20,
+    color: '#000000',
+  },
+  required: {
+    color: '#ff0a0a',
   },
   input: {
-    backgroundColor: '#333333', // Dark gray background
+    backgroundColor: '#FFFFFF',
     borderRadius: 10,
-    color: '#FFFFFF', // White text
+    color: '#000000',
+    padding: 10,
+    marginBottom: 20,
+  },
+  inputError: {
+    borderColor: '#ff0a0a',
+    borderWidth: 1,
+  },
+  errorText: {
+    color: '#ff0a0a',
+    marginBottom: 15,
   },
   button: {
     marginTop: 20,
     padding: 15,
-    backgroundColor: '#6528FF', // Purple background
+    backgroundColor: '#6528FF',
     borderRadius: 10,
   },
   buttonText: {
     fontSize: 24,
-    color: '#FFFFFF', // White text
+    color: '#FFFFFF',
     fontWeight: 'bold',
+    textAlign: 'center',
   },
 });
 

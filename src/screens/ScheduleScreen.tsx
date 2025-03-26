@@ -57,7 +57,7 @@ const ScheduleScreen = () => {
   };
 
   return (
-    <View style={{flex: 1, backgroundColor: '#1E1E1E', paddingTop: 40}}>
+    <View style={{flex: 1, backgroundColor: '#1E1E1E'}}>
       {/* Header */}
       <Pressable onPress={navigateToPrevious} style={styles.header}>
         <BackIcon size={30} color={'#FFFFFF'} />
