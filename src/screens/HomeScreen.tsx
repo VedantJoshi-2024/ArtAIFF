@@ -75,21 +75,30 @@ const HomeScreen = () => {
         ItemSeparatorComponent={() => <View style={{height: 10}} />}
         contentContainerStyle={{paddingTop: 10}}
         renderItem={({item, index}: {item: ShowItem; index: number}) => (
-          <View
+          <Pressable
+            onPress={() => openLocationInMap(item.location)}
             style={{
               paddingVertical: 20,
               paddingHorizontal: 10,
               borderRadius: 10,
-              backgroundColor: '#aaaffc4f',
+              backgroundColor: '#ffffffaf',
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              alignItems: 'center',
             }}
             key={index}>
-            <Text style={{fontSize: 16, fontWeight: 'bold'}}>{item.title}</Text>
-            <View style={{flexDirection: 'row'}}>
-              <Text style={{marginLeft: 0}}>{item.location}</Text>
-              <Text style={{marginLeft: 10}}>{item.time}</Text>
-              <Text style={{marginLeft: 10}}>{item.duration}</Text>
+            <View>
+              <Text style={{fontSize: 16, fontWeight: 'bold'}}>{item.title}</Text>
+              <View style={{flexDirection: 'row', marginTop: 5}}>
+                <Text style={{marginLeft: 0}}>{item.time}</Text>
+                <Text style={{marginLeft: 10}}>{item.duration}</Text>
+              </View>
             </View>
-          </View>
+            <View style={{marginRight: 10, alignItems: 'flex-end'}}>
+              <MapAnnotationIcon pColor={'#5B26FA'} sColor={'#5B26FA'} />
+              <Text style={{marginLeft: 10}}>{item.location}</Text>
+            </View>
+          </Pressable>
         )}
         keyExtractor={(item, index) => index.toString()}
       />
