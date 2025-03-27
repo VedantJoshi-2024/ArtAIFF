@@ -14,19 +14,8 @@ import {
 import BackIcon from '../assets/icons/BackIcon';
 import { MainNaivgatorType } from '../MainNavigator';
 import scheduleData from '../staticData/Schedule';
-
-const getLocationBackgroundColor = (location: string) => {
-  switch (location) {
-    case 'AB-10 103':
-      return '#5B26FA';
-    case 'New PC (Panchangana)':
-      return '#FFD700';
-    case 'Jibaben Patel (Kanisa) Memorial Auditorium':
-      return '#FF00FF';
-    default:
-      return '#FFFFFF'; // Default White
-  }
-};
+import Colors from '../constants/Colors'; // Add this import
+import utils from '../utils/utils';
 
 const ScheduleScreen = () => {
   const scheduleDates = Object.keys(scheduleData);
@@ -100,13 +89,16 @@ const ScheduleScreen = () => {
             <FlatList
               data={scheduleData[date]}
               keyExtractor={(item, idx) => idx.toString()}
+              showsVerticalScrollIndicator={false}
               renderItem={({item}) => (
-                <View style={[styles.scheduleItem]}>
+                <Pressable
+                  onPress={() => utils.openLocationInMap(item.locations[0])}
+                  style={[styles.scheduleItem]}>
                   <View
                     style={[
                       styles.dot,
                       {
-                        backgroundColor: getLocationBackgroundColor(
+                        backgroundColor: utils.getLocationBackgroundColor(
                           item.locations[0],
                         ),
                       },
@@ -118,7 +110,7 @@ const ScheduleScreen = () => {
                       {item.time} | {item.locations.join(', ')}
                     </Text>
                   </View>
-                </View>
+                </Pressable>
               )}
               contentContainerStyle={{paddingVertical: 10}}
             />
@@ -136,13 +128,13 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     marginBottom: 10,
     paddingHorizontal: 20,
-    backgroundColor: '#1E1E1E', // Dark background
+    backgroundColor: Colors.darkBackground, // Updated
   },
   header: {
     padding: 20,
-    backgroundColor: '#333333', // Dark gray background
+    backgroundColor: Colors.darkGray, // Updated
     borderBottomWidth: 1,
-    borderBottomColor: '#444444', // Slightly lighter gray for separation
+    borderBottomColor: Colors.lightGray, // Updated
     alignItems: 'center',
     flexDirection: 'row',
     marginBottom: 30,
@@ -154,7 +146,7 @@ const styles = StyleSheet.create({
   tabText: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: '#FFFFFF', // White text
+    color: Colors.white, // Updated
   },
   scheduleItem: {
     flexDirection: 'row',
@@ -163,13 +155,14 @@ const styles = StyleSheet.create({
     marginVertical: 5,
     borderRadius: 8,
     marginHorizontal: 20,
-    backgroundColor: '#333333', // Dark gray background
+    paddingVertical: 15,
+    backgroundColor: Colors.darkGray, // Updated
   },
   dot: {
     width: 10,
     height: 10,
     borderRadius: 5,
-    backgroundColor: '#FF00FF', // Pink dot
+    backgroundColor: Colors.magenta, // Updated
     marginRight: 10,
   },
   textContainer: {
@@ -178,11 +171,11 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: '#FFFFFF', // White text
+    color: Colors.white, // Updated
   },
   details: {
     fontSize: 14,
-    color: '#B3B3B3', // Light gray text
+    color: Colors.lightGray, // Updated
   },
 });
 

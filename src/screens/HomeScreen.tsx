@@ -15,13 +15,12 @@ import {
 import MapAnnotationIcon from '../assets/icons/MapAnnotationIcon';
 import { MainNaivgatorType } from '../MainNavigator';
 import { RouteName } from '../routes/RouteName';
-
-interface ShowItem {
-  title: string;
-  time: string;
-  duration: string;
-  location: string;
-}
+import SplashIcon from '../assets/icons/SplashIcon';
+import Colors from '../constants/Colors';
+import scheduleData, { ScheduleItem } from '../staticData/Schedule';
+import moment from 'moment';
+import utils from '../utils/utils';
+import { fonts } from '../constants/fonts';
 
 const HomeScreen = () => {
   const navigation =
@@ -29,79 +28,102 @@ const HomeScreen = () => {
   const routeParams =
     useRoute<RouteProp<MainNaivgatorType, RouteName.HomeScreen>>()?.params;
 
-  const [ongoingShows, setOngoingShows] = useState<ShowItem[]>([
-    {
-      title: 'The 400 Blows',
-      time: '2:00 PM',
-      duration: '65m',
-      location: 'AB-10 103',
-    },
-    {
-      title: 'Priscilla',
-      time: '2:00 PM',
-      duration: '65m',
-      location: 'AB-10 103',
-    },
-    {title: 'Patthh', time: '2:00 PM', duration: '65m', location: 'AB-10 103'},
-    {
-      title: 'Jules and Jim',
-      time: '2:00 PM',
-      duration: '65m',
-      location: 'AB-10 103',
-    },
-  ]);
-
-  const [comingNextShows, setComingNextShows] = useState<ShowItem[]>([
-    {
-      title: 'Sample Film A',
-      time: '4:00 PM',
-      duration: '60m',
-      location: 'New PC (Panchangana)',
-    },
-    {
-      title: 'Sample Film B',
-      time: '5:00 PM',
-      duration: '90m',
-      location: 'Jibaben Patel (Kanisa) Memorial Auditorium',
-    },
-  ]);
-
   const [index, setIndex] = useState(0);
+  const dateToday = moment(new Date()).format('DD MMM');
+
+  const allEvents = scheduleData;
+  const onGoingEvents = allEvents[dateToday];
+  const upcomingEvents = Object.keys(allEvents)
+    .filter(date => date !== dateToday)
+    .reduce((acc, date) => {
+      acc[date] = allEvents[date];
+      return acc;
+    }, {} as Record<string, ScheduleItem[]>);
+
+  const switchTab = () => {
+    setIndex(index === 0 ? 1 : 0);
+  };
 
   const renderScene = ({route}: any) => {
     return (
-      <FlatList
-        data={route.key === 'ongoing' ? ongoingShows : comingNextShows}
-        ItemSeparatorComponent={() => <View style={{height: 10}} />}
-        contentContainerStyle={{paddingTop: 10}}
-        renderItem={({item, index}: {item: ShowItem; index: number}) => (
-          <Pressable
-            onPress={() => openLocationInMap(item.location)}
-            style={{
-              paddingVertical: 20,
-              paddingHorizontal: 10,
-              borderRadius: 10,
-              backgroundColor: '#ffffffaf',
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              alignItems: 'center',
+      <ScrollView
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        keyboardShouldPersistTaps={'always'}
+        onScrollBeginDrag={switchTab}
+        contentContainerStyle={{width: '100%'}}>
+        <FlatList
+          data={
+            route.key === 'ongoing'
+              ? onGoingEvents
+              : Object.values(upcomingEvents).flat()
+          }
+          ItemSeparatorComponent={() => <View style={{height: 10}} />}
+          contentContainerStyle={{paddingTop: 10}}
+          renderItem={({item, index}: {item: ScheduleItem; index: number}) => 
+            {
+              let duration = '';
+              const startTime = moment(item.time?.split(' - ')[0], 'hh:mm');
+              let endTime = moment(item.time?.split(' - ')[1], 'hh:mm');
+
+              // Adjust for cases where end time is earlier than start time
+              if (endTime.isBefore(startTime)) {
+                endTime.add(12, 'hours');
+              }
+
+              const durationMinutes = endTime.diff(startTime, 'minutes');
+              const hours = Math.floor(durationMinutes / 60);
+              const minutes = durationMinutes % 60;
+
+              duration =
+                (hours > 0 ? `${hours}h ` : '') +
+                (minutes > 0 ? `${minutes}m` : '').trim();
+              return (
+                <Pressable
+                  onPress={() => utils.openLocationInMap(item.locations[0])}
+                  style={{
+                    paddingVertical: 20,
+                    paddingHorizontal: 10,
+                    borderRadius: 10,
+                    backgroundColor: Colors.lightWhite,
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                  }}
+                  key={index}>
+                  <View style={{width: '90%'}}>
+                    <Text style={{fontSize: 20, fontWeight: 'bold'}}>
+                      {item.title}
+                    </Text>
+                    <View style={{flexDirection: 'row'}}>
+                      <Text style={{marginLeft: 0}}>
+                        {startTime.format('HH:MM')}
+                      </Text>
+                      <Text style={{marginLeft: 10}}>{duration}</Text>
+                    </View>
+                  </View>
+                  <View style={{marginRight: 10, alignItems: 'flex-end'}}>
+                    <MapAnnotationIcon
+                      pColor={utils.getLocationBackgroundColor(
+                        item.locations[0],
+                      )}
+                      sColor={utils.getLocationBackgroundColor(
+                        item.locations[0],
+                      )}
+                    />
+                    {/* <Text style={{marginLeft: 10}}>{item.locations[0]}</Text> */}
+                  </View>
+                </Pressable>
+              );
             }}
-            key={index}>
-            <View>
-              <Text style={{fontSize: 16, fontWeight: 'bold'}}>{item.title}</Text>
-              <View style={{flexDirection: 'row', marginTop: 5}}>
-                <Text style={{marginLeft: 0}}>{item.time}</Text>
-                <Text style={{marginLeft: 10}}>{item.duration}</Text>
-              </View>
-            </View>
-            <View style={{marginRight: 10, alignItems: 'flex-end'}}>
-              <MapAnnotationIcon pColor={'#5B26FA'} sColor={'#5B26FA'} />
-              <Text style={{marginLeft: 10}}>{item.location}</Text>
-            </View>
-          </Pressable>
-        )}
-        keyExtractor={(item, index) => index.toString()}
-      />
+          keyExtractor={(item, index) => index.toString()}
+          ListEmptyComponent={() => (
+            <Text style={[styles.quickLinkText, {textAlign: 'center'}]}>
+              {'No Events for selected category!'}
+            </Text>
+          )}
+        />
+      </ScrollView>
     );
   };
 
@@ -114,43 +136,34 @@ const HomeScreen = () => {
     navigation.navigate(RouteName.ScheduleScreen);
   const navigateToFAQ = () => navigation.navigate(RouteName.FAQScreen);
 
-  const openLocationInMap = async (location: string) => {
-    let url = '';
-    switch (location) {
-      case 'AB-10 103':
-        url = 'https://maps.app.goo.gl/EfxoDFUmec6DQtUv8';
-        break;
-      case 'New PC (Panchangana)':
-        url = 'https://maps.app.goo.gl/ckQYFVyX3xEDoRar9';
-        break;
-      case 'Jibaben Patel (Kanisa) Memorial Auditorium':
-        url = 'https://maps.app.goo.gl/Vk814x1sJygqDsEw7';
-        break;
-    }
-    const supported = await Linking.canOpenURL(url);
-    if (supported) {
-      await Linking.openURL(url);
-    } else {
-      console.log('Cannot open URL');
-    }
-  };
-
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView contentContainerStyle={styles.scrollViewContent}>
+      <ScrollView
+        contentContainerStyle={styles.scrollViewContent}
+        showsVerticalScrollIndicator={false}>
         <View style={styles.innerContainer}>
+          <View
+            style={{
+              borderRadius: 105,
+              height: 105,
+              width: 105,
+              backgroundColor: Colors.neonGreen,
+            }}
+          />
+          <View style={{position: 'absolute', top: 30, left: 22}}>
+            <SplashIcon w={180} h={143} />
+          </View>
           <View style={styles.header}>
             <Text style={styles.title}>{routeParams?.name}</Text>
             <Text style={styles.subtitle}>
               {'Welcome to Art@IITGN Film Festival'}
             </Text>
 
-            <Text style={styles.quickLinksTitle}>{'Quick links:'}</Text>
             <View style={styles.quickLinksContainer}>
               <Pressable
                 style={styles.quickLinkButton}
                 onPress={navigateToSchedule}>
-                <Text style={styles.quickLinkText}>{'Check schedule'}</Text>
+                <Text style={styles.quickLinkText}>{'SCHEDULE'}</Text>
               </Pressable>
               <Pressable style={styles.quickLinkButton} onPress={navigateToFAQ}>
                 <Text style={styles.quickLinkText}>{'FAQs'}</Text>
@@ -175,32 +188,49 @@ const HomeScreen = () => {
             })}
           </View>
           <View style={styles.sceneContainer}>
-            {renderScene({ route: routes[index] })}
+            {renderScene({route: routes[index]})}
           </View>
 
           <View style={styles.locationsContainer}>
             <Text style={styles.locationsTitle}>{'Locations:'}</Text>
             <View style={styles.locationList}>
               <TouchableOpacity
-                style={styles.locationItem}
-                onPress={() => openLocationInMap('AB-10 103')}>
-                <MapAnnotationIcon />
+                style={[
+                  styles.locationItem,
+                  {
+                    backgroundColor:
+                      utils.getLocationBackgroundColor('AB-10 103'),
+                  },
+                ]}
+                onPress={() => utils.openLocationInMap('AB-10 103')}>
                 <Text style={styles.locationText}>AB-10 103</Text>
               </TouchableOpacity>
               <TouchableOpacity
-                style={styles.locationItem}
-                onPress={() => openLocationInMap('New PC (Panchangana)')}>
-                <MapAnnotationIcon />
+                style={[
+                  styles.locationItem,
+                  {
+                    backgroundColor: utils.getLocationBackgroundColor(
+                      'New PC (Panchangana)',
+                    ),
+                  },
+                ]}
+                onPress={() => utils.openLocationInMap('New PC (Panchangana)')}>
                 <Text style={styles.locationText}>New PC (Panchangana)</Text>
               </TouchableOpacity>
               <TouchableOpacity
-                style={styles.locationItem}
+                style={[
+                  styles.locationItem,
+                  {
+                    backgroundColor: utils.getLocationBackgroundColor(
+                      'Jibaben Patel (Kanisa) Memorial Auditorium',
+                    ),
+                  },
+                ]}
                 onPress={() =>
-                  openLocationInMap(
-                    'Jibaben Patel (Kanisa) Memorial Auditorium'
+                  utils.openLocationInMap(
+                    'Jibaben Patel (Kanisa) Memorial Auditorium',
                   )
                 }>
-                <MapAnnotationIcon />
                 <Text style={styles.locationText}>
                   Jibaben Patel (Kanisa) Memorial Auditorium
                 </Text>
@@ -216,30 +246,30 @@ const HomeScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#121212', // Dark background
+    backgroundColor: Colors.darkBackground, // Updated
   },
   innerContainer: {
     flex: 1,
-    backgroundColor: '#121212', // Dark background
+    backgroundColor: Colors.darkBackground, // Updated
     padding: 30,
   },
   header: {
-    padding: 20,
+    // padding: 20,
     width: '100%',
   },
   title: {
     fontSize: 44,
-    color: '#FFFFFF', // White text
+    color: Colors.white, // Updated
     fontWeight: 'bold',
   },
   subtitle: {
     fontSize: 16,
-    color: '#B3B3B3', // Light gray text
+    color: Colors.lightGray, // Updated
   },
   quickLinksTitle: {
     fontWeight: 'bold',
     fontSize: 24,
-    color: '#FFFFFF', // White text
+    color: Colors.white, // Updated
     marginTop: 20,
   },
   quickLinksContainer: {
@@ -250,14 +280,15 @@ const styles = StyleSheet.create({
   quickLinkButton: {
     borderRadius: 10,
     padding: 15,
-    backgroundColor: '#1F1F1F', // Darker button background
+    backgroundColor: Colors.purple, // Updated
     width: '48%',
     justifyContent: 'center',
     alignItems: 'center',
   },
   quickLinkText: {
-    color: '#BB86FC', // Accent color
+    color: Colors.white, // Updated
     fontWeight: '600',
+    fontSize: 20,
   },
   tabContainer: {
     flexDirection: 'row',
@@ -265,18 +296,18 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     width: '100%',
     borderBottomWidth: 1,
-    borderBottomColor: '#333333', // Darker border
+    borderBottomColor: Colors.scheduleItemBackground, // Updated
   },
   tabButton: {
     padding: 10,
     borderBottomWidth: 2.5,
-    borderBottomColor: '#121212', // Match background
+    borderBottomColor: Colors.tabHighlightColor, // Updated
   },
   selectedTabButton: {
-    borderBottomColor: '#BB86FC', // Accent color for selected tab
+    borderBottomColor: Colors.purple, // Updated
   },
   tabText: {
-    color: '#FFFFFF', // White text
+    color: Colors.white, // Updated
   },
   sceneContainer: {
     marginTop: 8,
@@ -289,23 +320,31 @@ const styles = StyleSheet.create({
   locationsTitle: {
     fontWeight: 'bold',
     fontSize: 24,
-    color: '#FFFFFF', // White text
+    color: Colors.white, // Updated
     marginTop: 20,
   },
   locationList: {
-    flexDirection: 'column',
+    flexDirection: 'row',
     justifyContent: 'space-around',
     marginVertical: 10,
+    width: '100%',
   },
   locationItem: {
     flexDirection: 'row',
     alignItems: 'center',
     marginTop: 10,
+    borderRadius: 10,
+    paddingHorizontal: 15,
+    paddingVertical: 5,
+    width: '30%',
   },
   locationText: {
-    color: '#BB86FC', // Accent color
+    color: Colors.white, // Updated
     textDecorationLine: 'underline',
     marginLeft: 10,
+    fontWeight: 'bold',
+    fontSize: 20,
+    fontFamily: fonts.BGCMedium,
   },
   scrollViewContent: {
     flexGrow: 1,

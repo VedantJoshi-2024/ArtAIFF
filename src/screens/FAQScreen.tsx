@@ -17,15 +17,17 @@ const FAQScreen = () => {
       {/* Header */}
       <Pressable onPress={navigateToPrevious} style={styles.header}>
         <BackIcon size={30} color={'#FFFFFF'} />
-        <Text style={[styles.title, { marginLeft: 20 }]}>{'FAQs'}</Text>
+        <Text style={[styles.title, {marginLeft: 20}]}>{'FAQs'}</Text>
       </Pressable>
 
-      <Text style={[styles.subtitle, { paddingHorizontal: 20 }]}>
+      <Text style={[styles.subtitle, {paddingHorizontal: 20}]}>
         {'Art@IITGN Film Festival – Frequently Asked Questions (FAQs)'}
       </Text>
 
       {/* FAQ List */}
-      <ScrollView contentContainerStyle={styles.scrollContainer}>
+      <ScrollView
+        contentContainerStyle={styles.scrollContainer}
+        showsVerticalScrollIndicator={false}>
         {faqItems.map((category, index) => (
           <View key={index} style={styles.categoryContainer}>
             <Text style={styles.categoryTitle}>{category.category}</Text>
