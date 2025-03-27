@@ -60,66 +60,64 @@ const HomeScreen = () => {
           }
           ItemSeparatorComponent={() => <View style={{height: 10}} />}
           contentContainerStyle={{paddingTop: 10}}
-          renderItem={({item, index}: {item: ScheduleItem; index: number}) => 
-            {
-              let duration = '';
-              const startTime = moment(item.time?.split(' - ')[0], 'hh:mm');
-              let endTime = moment(item.time?.split(' - ')[1], 'hh:mm');
+          renderItem={({item, index}: {item: ScheduleItem; index: number}) => {
+            let duration = '';
+            const startTime = moment(item.time?.split(' - ')[0], 'hh:mm');
+            let endTime = moment(item.time?.split(' - ')[1], 'hh:mm');
 
-              // Adjust for cases where end time is earlier than start time
-              if (endTime.isBefore(startTime)) {
-                endTime.add(12, 'hours');
-              }
+            // Adjust for cases where end time is earlier than start time
+            if (endTime.isBefore(startTime)) {
+              endTime.add(12, 'hours');
+            }
 
-              const durationMinutes = endTime.diff(startTime, 'minutes');
-              const hours = Math.floor(durationMinutes / 60);
-              const minutes = durationMinutes % 60;
+            const durationMinutes = endTime.diff(startTime, 'minutes');
+            const hours = Math.floor(durationMinutes / 60);
+            const minutes = durationMinutes % 60;
 
-              duration =
-                (hours > 0 ? `${hours}h ` : '') +
-                (minutes > 0 ? `${minutes}m` : '').trim();
-              return (
-                <Pressable
-                  onPress={() => utils.openLocationInMap(item.locations[0])}
-                  style={{
-                    paddingVertical: 20,
-                    paddingHorizontal: 10,
-                    borderRadius: 10,
-                    backgroundColor: Colors.lightWhite,
-                    flexDirection: 'row',
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                  }}
-                  key={index}>
-                  <View style={{width: '90%'}}>
-                    <Text style={{fontSize: 20, fontWeight: 'bold'}}>
-                      {item.title}
+            duration =
+              (hours > 0 ? `${hours}h ` : '') +
+              (minutes > 0 ? `${minutes}m` : '').trim();
+            return (
+              <Pressable
+                onPress={() => utils.openLocationInMap(item.locations[0])}
+                style={{
+                  paddingVertical: 20,
+                  paddingHorizontal: 10,
+                  borderRadius: 10,
+                  backgroundColor: Colors.lightWhite,
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                }}
+                key={index}>
+                <View style={{width: '90%'}}>
+                  <Text style={{fontSize: 20, fontWeight: 'bold'}}>
+                    {item.title}
+                  </Text>
+                  <View style={{flexDirection: 'row'}}>
+                    <Text style={{marginLeft: 0}}>
+                      {startTime.format('HH:MM')}
                     </Text>
-                    <View style={{flexDirection: 'row'}}>
-                      <Text style={{marginLeft: 0}}>
-                        {startTime.format('HH:MM')}
-                      </Text>
-                      <Text style={{marginLeft: 10}}>{duration}</Text>
-                    </View>
+                    <Text style={{marginLeft: 10}}>{duration}</Text>
                   </View>
-                  <View style={{marginRight: 10, alignItems: 'flex-end'}}>
-                    <MapAnnotationIcon
-                      pColor={utils.getLocationBackgroundColor(
-                        item.locations[0],
-                      )}
-                      sColor={utils.getLocationBackgroundColor(
-                        item.locations[0],
-                      )}
-                    />
-                    {/* <Text style={{marginLeft: 10}}>{item.locations[0]}</Text> */}
-                  </View>
-                </Pressable>
-              );
-            }}
+                  <Text>{item.locations}</Text>
+                </View>
+                <View style={{marginRight: 10, alignItems: 'flex-end'}}>
+                  <MapAnnotationIcon
+                    pColor={utils.getLocationBackgroundColor(item.locations[0])}
+                    sColor={utils.getLocationBackgroundColor(item.locations[0])}
+                  />
+                  {/* <Text style={{marginLeft: 10}}>{item.locations[0]}</Text> */}
+                </View>
+              </Pressable>
+            );
+          }}
           keyExtractor={(item, index) => index.toString()}
           ListEmptyComponent={() => (
             <Text style={[styles.quickLinkText, {textAlign: 'center'}]}>
-              {'No Events for selected category!'}
+              {`No ${
+                route.key === 'ongoing' ? 'on going' : 'furthur'
+              } events are there!`}
             </Text>
           )}
         />
@@ -340,10 +338,8 @@ const styles = StyleSheet.create({
   },
   locationText: {
     color: Colors.white, // Updated
-    textDecorationLine: 'underline',
-    marginLeft: 10,
     fontWeight: 'bold',
-    fontSize: 20,
+    fontSize: 16,
     fontFamily: fonts.BGCMedium,
   },
   scrollViewContent: {
