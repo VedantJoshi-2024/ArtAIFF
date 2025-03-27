@@ -91,16 +91,16 @@ const HomeScreen = () => {
                 }}
                 key={index}>
                 <View style={{width: '90%'}}>
-                  <Text style={{fontSize: 20, fontWeight: 'bold'}}>
+                  <Text style={{fontSize: 20, fontWeight: 'bold', fontFamily: fonts.SGRegular}}>
                     {item.title}
                   </Text>
                   <View style={{flexDirection: 'row'}}>
-                    <Text style={{marginLeft: 0}}>
+                    <Text style={{marginLeft: 0, fontFamily: fonts.SGRegular}}>
                       {startTime.format('HH:MM')}
                     </Text>
-                    <Text style={{marginLeft: 10}}>{duration}</Text>
+                    <Text style={{marginLeft: 10, fontFamily: fonts.SGRegular}}>{duration}</Text>
                   </View>
-                  <Text>{item.locations}</Text>
+                  <Text style={{fontFamily: fonts.SGRegular}}>{item.locations}</Text>
                 </View>
                 <View style={{marginRight: 10, alignItems: 'flex-end'}}>
                   <MapAnnotationIcon
@@ -114,7 +114,7 @@ const HomeScreen = () => {
           }}
           keyExtractor={(item, index) => index.toString()}
           ListEmptyComponent={() => (
-            <Text style={[styles.quickLinkText, {textAlign: 'center'}]}>
+            <Text style={[styles.quickLinkText, {textAlign: 'center', fontFamily: fonts.SGRegular}]}>
               {`No ${
                 route.key === 'ongoing' ? 'on going' : 'furthur'
               } events are there!`}
@@ -152,8 +152,10 @@ const HomeScreen = () => {
             <SplashIcon w={180} h={143} />
           </View>
           <View style={styles.header}>
-            <Text style={styles.title}>{routeParams?.name}</Text>
-            <Text style={styles.subtitle}>
+            <Text style={[styles.title, {fontFamily: fonts.SGRegular}]}>
+              {routeParams?.name}
+            </Text>
+            <Text style={[styles.subtitle, {fontFamily: fonts.SGRegular}]}>
               {'Welcome to Art@IITGN Film Festival'}
             </Text>
 
@@ -180,7 +182,9 @@ const HomeScreen = () => {
                     isSelected && styles.selectedTabButton,
                   ]}
                   onPress={() => setIndex(route_i)}>
-                  <Text style={styles.tabText}>{route_r.title}</Text>
+                  <Text style={[styles.tabText, {fontFamily: fonts.SGRegular}]}>
+                    {route_r.title}
+                  </Text>
                 </TouchableOpacity>
               );
             })}
@@ -190,7 +194,9 @@ const HomeScreen = () => {
           </View>
 
           <View style={styles.locationsContainer}>
-            <Text style={styles.locationsTitle}>{'Locations:'}</Text>
+            <Text style={[styles.locationsTitle, {fontFamily: fonts.SGRegular}]}>
+              {'Locations:'}
+            </Text>
             <View style={styles.locationList}>
               <TouchableOpacity
                 style={[
@@ -201,7 +207,9 @@ const HomeScreen = () => {
                   },
                 ]}
                 onPress={() => utils.openLocationInMap('AB-10 103')}>
-                <Text style={styles.locationText}>AB-10 103</Text>
+                <Text style={[styles.locationText, {fontFamily: fonts.SGRegular}]}>
+                  AB-10 103
+                </Text>
               </TouchableOpacity>
               <TouchableOpacity
                 style={[
@@ -213,7 +221,9 @@ const HomeScreen = () => {
                   },
                 ]}
                 onPress={() => utils.openLocationInMap('New PC (Panchangana)')}>
-                <Text style={styles.locationText}>New PC (Panchangana)</Text>
+                <Text style={[styles.locationText, {fontFamily: fonts.SGRegular}]}>
+                  New PC (Panchangana)
+                </Text>
               </TouchableOpacity>
               <TouchableOpacity
                 style={[
@@ -229,7 +239,7 @@ const HomeScreen = () => {
                     'Jibaben Patel (Kanisa) Memorial Auditorium',
                   )
                 }>
-                <Text style={styles.locationText}>
+                <Text style={[styles.locationText, {fontFamily: fonts.SGRegular}]}>
                   Jibaben Patel (Kanisa) Memorial Auditorium
                 </Text>
               </TouchableOpacity>

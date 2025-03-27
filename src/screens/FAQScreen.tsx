@@ -6,6 +6,7 @@ import BackIcon from '../assets/icons/BackIcon';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { MainNaivgatorType } from '../MainNavigator';
+import { fonts } from '../constants/fonts';
 
 const FAQScreen = () => {
   const navigation =
@@ -17,11 +18,13 @@ const FAQScreen = () => {
       {/* Header */}
       <Pressable onPress={navigateToPrevious} style={styles.header}>
         <BackIcon size={30} color={'#FFFFFF'} />
-        <Text style={[styles.title, {marginLeft: 20}]}>{'FAQs'}</Text>
+        <Text style={[styles.title, {marginLeft: 20, fontFamily: fonts.SGRegular}]}>
+          {'FAQs'}
+        </Text>
       </Pressable>
 
-      <Text style={[styles.subtitle, {paddingHorizontal: 20}]}>
-        {'Art@IITGN Film Festival – Frequently Asked Questions (FAQs)'}
+      <Text style={[styles.subtitle, {paddingHorizontal: 20, fontFamily: fonts.SGRegular}]}>
+        {'Art@IITGN Film Festival - Frequently Asked Questions (FAQs)'}
       </Text>
 
       {/* FAQ List */}
@@ -30,7 +33,9 @@ const FAQScreen = () => {
         showsVerticalScrollIndicator={false}>
         {faqItems.map((category, index) => (
           <View key={index} style={styles.categoryContainer}>
-            <Text style={styles.categoryTitle}>{category.category}</Text>
+            <Text style={[styles.categoryTitle, {fontFamily: fonts.SGRegular}]}>
+              {category.category}
+            </Text>
             {category.faqs.map((faq, faqIndex) => (
               <FAQComponent key={faqIndex} item={faq} />
             ))}

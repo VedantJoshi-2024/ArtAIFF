@@ -16,6 +16,7 @@ import { MainNaivgatorType } from '../MainNavigator';
 import scheduleData from '../staticData/Schedule';
 import Colors from '../constants/Colors'; // Add this import
 import utils from '../utils/utils';
+import { fonts } from '../constants/fonts';
 
 const ScheduleScreen = () => {
   const scheduleDates = Object.keys(scheduleData);
@@ -50,7 +51,9 @@ const ScheduleScreen = () => {
       {/* Header */}
       <Pressable onPress={navigateToPrevious} style={styles.header}>
         <BackIcon size={30} color={'#FFFFFF'} />
-        <Text style={[styles.title, {marginLeft: 20}]}>{'Schedule'}</Text>
+        <Text style={[styles.title, {marginLeft: 20, fontFamily: fonts.SGRegular}]}>
+          {'Schedule'}
+        </Text>
       </Pressable>
       {/* Tab Navigation */}
       <View style={styles.tabContainer}>
@@ -67,7 +70,7 @@ const ScheduleScreen = () => {
               <Text
                 style={[
                   styles.tabText,
-                  {color: isSelected ? '#FFFFFF' : '#B3B3B3'},
+                  {color: isSelected ? Colors.white : Colors.lightGray, fontFamily: fonts.SGRegular},
                 ]}>
                 {date}
               </Text>
@@ -105,8 +108,10 @@ const ScheduleScreen = () => {
                     ]}
                   />
                   <View style={styles.textContainer}>
-                    <Text style={styles.title}>{item.title}</Text>
-                    <Text style={styles.details}>
+                    <Text style={[styles.title, {fontFamily: fonts.SGRegular}]}>
+                      {item.title}
+                    </Text>
+                    <Text style={[styles.details, {fontFamily: fonts.SGRegular}]}>
                       {item.time} | {item.locations.join(', ')}
                     </Text>
                   </View>

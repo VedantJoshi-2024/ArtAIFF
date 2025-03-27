@@ -1,6 +1,7 @@
 import React from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import DownWardIcon from '../assets/icons/DownWardIcon';
+import { fonts } from '../constants/fonts';
 
 const FAQComponent = ({ item }: { item: { question: string; answer: string } }) => {
   const [expanded, setExpanded] = React.useState(false);
@@ -36,12 +37,14 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#FFFFFF', // White text
     width: '90%',
+    fontFamily: fonts.SGRegular,
   },
   answer: {
     fontSize: 14,
     color: '#B3B3B3', // Light gray text
     marginTop: 10,
     lineHeight: 20,
+    fontFamily: fonts.SGRegular,
   },
 });
 
