@@ -6,9 +6,9 @@ const getLocationBackgroundColor = (location: string) => {
     case 'AB-10 103':
       return Colors.purple; // Updated
     case 'New PC (Panchangana)':
-      return Colors.gold; // Updated
+      return Colors.neonGreen; // Updated
     case 'Jibaben Patel (Kanisa) Memorial Auditorium':
-      return Colors.magenta; // Updated
+      return Colors.pink; // Updated
     default:
       return Colors.white; // Updated
   }

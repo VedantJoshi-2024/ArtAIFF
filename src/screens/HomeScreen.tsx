@@ -106,6 +106,8 @@ const HomeScreen = () => {
                   <MapAnnotationIcon
                     pColor={utils.getLocationBackgroundColor(item.locations[0])}
                     sColor={utils.getLocationBackgroundColor(item.locations[0])}
+                    h={28}
+                    w={28}
                   />
                   {/* <Text style={{marginLeft: 10}}>{item.locations[0]}</Text> */}
                 </View>
@@ -142,14 +144,13 @@ const HomeScreen = () => {
         <View style={styles.innerContainer}>
           <View
             style={{
-              borderRadius: 105,
-              height: 105,
-              width: 105,
+              height: 84,
+              width: 84,
+              borderRadius: 84,
               backgroundColor: Colors.neonGreen,
-            }}
-          />
-          <View style={{position: 'absolute', top: 30, left: 22}}>
-            <SplashIcon w={180} h={143} />
+              overflow: 'hidden',
+            }}>
+            <SplashIcon w={205} h={205} />
           </View>
           <View style={styles.header}>
             <Text style={[styles.title, {fontFamily: fonts.SGRegular}]}>
@@ -194,7 +195,8 @@ const HomeScreen = () => {
           </View>
 
           <View style={styles.locationsContainer}>
-            <Text style={[styles.locationsTitle, {fontFamily: fonts.SGRegular}]}>
+            <Text
+              style={[styles.locationsTitle, {fontFamily: fonts.SGRegular}]}>
               {'Locations:'}
             </Text>
             <View style={styles.locationList}>
@@ -207,7 +209,8 @@ const HomeScreen = () => {
                   },
                 ]}
                 onPress={() => utils.openLocationInMap('AB-10 103')}>
-                <Text style={[styles.locationText, {fontFamily: fonts.SGRegular}]}>
+                <Text
+                  style={[styles.locationText, {fontFamily: fonts.SGRegular}]}>
                   AB-10 103
                 </Text>
               </TouchableOpacity>
@@ -221,7 +224,11 @@ const HomeScreen = () => {
                   },
                 ]}
                 onPress={() => utils.openLocationInMap('New PC (Panchangana)')}>
-                <Text style={[styles.locationText, {fontFamily: fonts.SGRegular}]}>
+                <Text
+                  style={[
+                    styles.locationText,
+                    {fontFamily: fonts.SGRegular, color: Colors.black},
+                  ]}>
                   New PC (Panchangana)
                 </Text>
               </TouchableOpacity>
@@ -239,7 +246,8 @@ const HomeScreen = () => {
                     'Jibaben Patel (Kanisa) Memorial Auditorium',
                   )
                 }>
-                <Text style={[styles.locationText, {fontFamily: fonts.SGRegular}]}>
+                <Text
+                  style={[styles.locationText, {fontFamily: fonts.SGRegular}]}>
                   Jibaben Patel (Kanisa) Memorial Auditorium
                 </Text>
               </TouchableOpacity>
@@ -336,20 +344,23 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
     marginVertical: 10,
     width: '100%',
+    alignItems: 'center',
   },
   locationItem: {
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'center',
     marginTop: 10,
-    borderRadius: 10,
-    paddingHorizontal: 15,
-    paddingVertical: 5,
-    width: '30%',
+    width: '32%',
+    height: '100%',
+    padding: 10,
   },
   locationText: {
     color: Colors.white, // Updated
     fontWeight: 'bold',
     fontSize: 16,
+    width: '100%',
+    textAlign: 'center',
     fontFamily: fonts.BGCMedium,
   },
   scrollViewContent: {

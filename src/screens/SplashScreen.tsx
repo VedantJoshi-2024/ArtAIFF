@@ -56,10 +56,9 @@ const SplashScreen = () => {
           height: 260,
           width: 260,
           backgroundColor: Colors.neonGreen,
-          justifyContent: 'center',
-          alignItems: 'center',
+          overflow: 'hidden',
         }}>
-        <SplashIcon w={268} h={210} />
+        <SplashIcon w={360} h={360} />
       </View>
       <Text
         style={{
